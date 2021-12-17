@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <title>Meeper</title>
+</head>
+<body class="h-full flex flex-col overflow-hidden">
+    
+    <section class="flex">
+        
+        <div class="flex flex-col h-screen w-6/12 bg-teal-600">
+
+            <div class="m-auto mb-0">
+                <h1 class="text-center text-3xl text-white">Conecta con personas de todo el mundo.</h1>
+            </div>
+
+            <div class="m-auto h-auto w-8/12 shadow-2xl bg-teal-700 text-white rounded-lg">
+                <h1 class="p-5 text-center text-4xl"><i class="fas fa-kiwi-bird"></i> Meeper</h1>
+                <p class="text-2xl text-center mb-3">Iniciar Sesión</p>
+                
+                <form action="#" method="POST">
+                    <div class="m-auto mb-4 w-10/12">
+    
+                        <label for="email" class="block text-white text-lg">Usuario</label>
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="username" type="text" placeholder="Tu usuario">
+                        
+                        <label for="email" class="block text-white text-lg mt-3">Contraseña</label>
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="password" type="password" placeholder="Tu contraseña">
+                                            
+                        <div class="flex mt-5 justify-end">
+                            <button class="text-white appearence-none w-full p-3 m-auto font-bold shadow bg-emerald-500 hover:bg-emerald-600 transition-all ease-linear duration-100 rounded">Enviar</button>
+                        </div>
+                                            
+                        <div class="flex mt-3 justify-start text-white">
+                            <ul>
+                                <li><a class="hover:text-emerald-400 transition-all ease-linear duration-100" href="">Crear Cuenta</a></li>
+                                <li><a class="hover:text-emerald-400 transition-all ease-linear duration-100" href="">¿Olvidaste tu contraseña?</a></li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                  </form>
+
+            </div>
+
+        </div>
+
+        <div class="h-screen w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
+
+        </div>
+    </section>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e323a62359.js" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+</body>
+</html>

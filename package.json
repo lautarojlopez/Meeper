@@ -1,0 +1,14 @@
+{
+  "name": "fleeper",
+  "version": "1.0.0",
+  "description": "Clon de red social Tweeter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lauty",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^2.2.19"
+  }
+}
