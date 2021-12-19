@@ -14,35 +14,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
     <title>Meeper</title>
 </head>
-<body class="h-full flex flex-col overflow-hidden">
+<body class="h-full flex flex-col">
     
     <section class="flex">
         
         <div class="flex flex-col h-screen w-6/12 bg-teal-600">
 
-            <div class="m-auto mb-0">
+            <!-- <div class="m-auto mb-0">
                 <h1 class="text-center text-3xl text-white">Conecta con personas de todo el mundo.</h1>
-            </div>
+            </div> -->
 
             <div class="m-auto h-auto w-8/12 shadow-2xl bg-teal-700 text-white rounded-lg">
                 <h1 class="p-5 text-center text-4xl"><i class="fas fa-kiwi-bird"></i> Meeper</h1>
                 <p class="text-2xl text-center mb-3">Crear Cuenta</p>
                 
-                <form action="#" method="POST">
+                <form action="{% url 'crear-cuenta' %}" method="POST">
+                    {% csrf_token %}
                     <div class="m-auto mb-4 w-10/12">
+
+                        <label for="email" class="block text-white text-lg">Nombre</label>
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if errors.first_name %} bg-red-100 border-red-500 {% endif %}" name="first_name" type="text" placeholder="Tu nombre">
+                        {% if errors %}
+                            <div class="text-sm font-bold text-red-500">{{ errors.first_name }}</div>
+                        {% endif %}
     
-                        <label for="email" class="block text-white text-lg">Usuario</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="username" type="text" placeholder="Tu usuario">
-                        
+                        <label for="email" class="block text-white text-lg mt-3">Usuario</label>
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if errors.username %} bg-red-100 border-red-500 {% endif %}" name="username" type="text" placeholder="Tu usuario">
+                        {% if errors %}
+                            <div class="text-sm font-bold text-red-500">{{ errors.username }}</div>
+                        {% endif %}
+
                         <label for="email" class="block text-white text-lg mt-3">E-mail</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="password" type="password" placeholder="Tu contraseña">
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if errors.email %} bg-red-100 border-red-500 {% endif %}" name="email" type="email" placeholder="Tu E-mail">
+                        {% if errors %}
+                            <div class="text-sm font-bold text-red-500">{{ errors.email }}</div>
+                        {% endif %}
 
                         <label for="email" class="block text-white text-lg mt-3">Contraseña</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="password" type="password" placeholder="Tu contraseña">
-                        
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if errors.password1 %} bg-red-100 border-red-500 {% endif %}" name="password1" type="password" placeholder="Tu contraseña">
+                        {% if errors %}
+                            <div class="text-sm font-bold text-red-500">{{ errors.password1 }}</div>
+                        {% endif %}
+
                         <label for="email" class="block text-white text-lg mt-3">Repite tu contraseña</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="password" type="password" placeholder="Tu contraseña">
-                        
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if errors.password2 %} bg-red-100 border-red-500 {% endif %}" name="password2" type="password" placeholder="Repite tu contraseña">
+                        {% if errors %}
+                            <div class="text-sm font-bold text-red-500">{{ errors.password2 }}</div>
+                        {% endif %}
+
                         <div class="flex mt-5 justify-end">
                             <button class="text-white appearence-none w-full p-3 m-auto font-bold shadow bg-emerald-500 hover:bg-emerald-600 transition-all ease-linear duration-100 rounded">Enviar</button>
                         </div>
@@ -60,13 +79,13 @@
 
         </div>
 
-        <div class="h-screen w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
+        <div class="h-full w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
 
         </div>
     </section>
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/e323a62359.js" crossorigin="anonymous"></script>
-    <script src="main.js"></script>
+    <script src="{% static "js/main.js" %}"></script>
 </body>
 </html>

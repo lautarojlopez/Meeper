@@ -22,5 +22,7 @@ urlpatterns = [
     # General
     path('', include('General.urls')),
     # Usuarios
-    path('', include('Usuarios.urls'))
+    path('', include('Usuarios.urls')),
+    # Posts
+    path('post/', include('Posts.urls'))
 ]

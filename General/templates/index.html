@@ -17,7 +17,7 @@
 </head>
 <body class="h-full flex flex-col bg-bluegray-100 overflow-hidden">
 
-    <i class="fixed bottom-5 right-5 md:invisible bg-teal-500 p-3 text-2xl rounded-full text-white fas fa-feather"></i>
+    <i class="z-10 fixed bottom-5 right-5 md:invisible bg-teal-500 p-3 text-2xl rounded-full text-white fas fa-feather"></i>
     
     <header class="fixed w-full z-10 bg-teal-600 flex justify-between items-center p-4 border-b border-3 border-teal-700 text-white shadow-md">
         <div>
@@ -39,8 +39,8 @@
                     <div class="flex items-center">
                         <img class="m-3 object-cover w-20 h-20 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
                         <div class="flex flex-col">
-                            <p>Usuario</p>
-                            <p class="text-gray-400 shadow-2xl">@username</p>
+                            <p>{{ request.user.first_name }}</p>
+                            <p class="text-gray-400 shadow-2xl">@{{ request.user.username }}</p>
                         </div>
                     </div>
                     <div class="border-t py-3 px-5 bg-gray-100">
@@ -60,8 +60,9 @@
                         </div>
                     </div>
                     <div class="border-t py-3 px-5 bg-gray-100">
-                        <form action="">
-                            <textarea id="mensaje" class="transition-all ease-linear duration-100 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2" type="text" name="" id="" placeholder="¿Qué estás pensando?" cols="30" rows="2"></textarea>
+                        <form action="{% url 'nuevo-post' %}" method="POST">
+                            {% csrf_token %}
+                            <textarea id="mensaje" name="content" class="transition-all ease-linear duration-100 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2" type="text" name="" id="" placeholder="¿Qué estás pensando?" cols="30" rows="2"></textarea>
                             <div class="flex justify-between">
                                 <button id="botonEnviar" class="desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
                                 <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
@@ -76,13 +77,27 @@
             <div class="mt-20 md:mt-0 w-11/12 md:w-10/12 lg:w-8/12 xl:w-6/12 pt-5">
                 {% for post in posts %}
                     <!-- Tweet -->
-                    <div class="border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
+                    <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
                         <div class="flex items-center">
                             <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
                             <div class="flex flex-col">
                                 <p>{{ post.user.first_name }}</p>
                                 <p class="text-gray-400">@{{ post.user.username }}</p>
                             </div>
+                            {% if post.user == request.user %}
+                                <div class="relative -top-5 w-full flex justify-end p-5">
+                                    <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                                    <div class="hidden transition-all duration-100 ease-linear absolute rounded top-10 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                                        <ul>
+                                            <li>
+                                                <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarPost" data-postid="{{ post.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% else %}
+                            {% endif %}
+                            
                         </div>
                         <p class="px-5 text-gray-400">{{ post.timestamp|naturaltime }}</p>
                         <p class="px-5">{{ post.content }}</p>
@@ -154,6 +169,10 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/e323a62359.js" crossorigin="anonymous"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static "js/main.js" %}"></script>
 </body>
 </html>

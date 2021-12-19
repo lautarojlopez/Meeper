@@ -61,4 +61,45 @@ document.addEventListener('click', function(e) {
     if(e.target.classList.contains('desactivado')){
         e.preventDefault()
     }
+
+    //Mostrar Menu Post
+    if(e.target.id == "menuPostIcon"){
+        let menu = e.target.parentElement.querySelector('#menuPost')
+        menu.classList.toggle('hidden')
+    }
+
+    //Eliminar Post
+    if(e.target.id == "eliminarPost"){
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se podrá revertir.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0d9488',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              axios.get(`post/eliminar/${e.target.dataset.postid}`)
+                .then(function (response) {
+                    e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove()
+                    console.log(response);
+                    Swal.fire(
+                        'Eliminado',
+                        '',
+                        'success'
+                      )
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    Swal.fire(
+                        'XD?',
+                        '',
+                        'error'
+                      )
+                })
+            }
+          })
+    }
 })

@@ -29,14 +29,24 @@
                 <p class="text-2xl text-center mb-3">Iniciar Sesión</p>
                 
                 <form action="#" method="POST">
+                    {% csrf_token %}
                     <div class="m-auto mb-4 w-10/12">
     
                         <label for="email" class="block text-white text-lg">Usuario</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="username" type="text" placeholder="Tu usuario">
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if form.errors.username or form.non_field_errors %} bg-red-100 border-red-500 {% endif %}" name="username" type="text" placeholder="Tu usuario">
+                        {% if form.errors.username %}
+                            <div class="text-sm font-bold text-red-500">{{ form.errors.username }}</div>
+                        {% endif %}
+                        {% if form.non_field_errors %}
+                            <div class="text-sm font-bold text-red-500">{{ form.non_field_errors }}</div>
+                        {% endif %}
                         
                         <label for="email" class="block text-white text-lg mt-3">Contraseña</label>
-                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring" name="password" type="password" placeholder="Tu contraseña">
-                                            
+                        <input class="appearance-none text-teal-800 border rounded w-full py-2 px-3 text-grey-darker focus:outline-none focus:ring {% if form.errors.password or form.non_field_errors %} bg-red-100 border-red-500 {% endif %}" name="password" type="password" placeholder="Tu contraseña">
+                        {% if form.errors.password %}
+                            <div class="text-sm font-bold text-red-500">{{ form.errors.password }}</div>
+                        {% endif %}
+
                         <div class="flex mt-5 justify-end">
                             <button class="text-white appearence-none w-full p-3 m-auto font-bold shadow bg-emerald-500 hover:bg-emerald-600 transition-all ease-linear duration-100 rounded">Enviar</button>
                         </div>
@@ -55,13 +65,13 @@
 
         </div>
 
-        <div class="h-screen w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
+        <div class="h-full w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
 
         </div>
     </section>
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/e323a62359.js" crossorigin="anonymous"></script>
-    <script src="main.js"></script>
+    <script src="{% static "js/main.js" %}"></script>
 </body>
 </html>
