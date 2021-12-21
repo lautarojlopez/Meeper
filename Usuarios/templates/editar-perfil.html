@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="flex mt-20">
+    <div class="w-12/12 md:w-6/12 shadow-lg border border-gray-300 rounded-lg m-auto">
+        <h3 class="text-center text-white bg-teal-600 text-xl rounded-tl-lg rounded-tr-lg p-3">Editar Perfil</h3>
+        
+        <form action="{% url 'editar-perfil' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="flex flex-col p-3">
+                <label for="" class="text-xl text-teal-400">Imagen</label>
+                {{ form_perfil.img }}
+            </div>
+            <div class="flex flex-col p-3">
+                <label for="" class="text-xl text-teal-400">Nombre</label>
+                {{ form_user.first_name }}
+            </div>
+            <div class="flex flex-col p-3">
+                <label for="" class="text-xl text-teal-400">Biografía</label>
+                {{ form_perfil.bio }}
+            </div>
+            <div class="flex justify-center">
+                <button type='submit' class="bg-teal-600 hover:bg-teal-500 transition-all ease-linear duration-100 rounded-lg p-3 m-3 text-white" type="submit"><i class="fas fa-save"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

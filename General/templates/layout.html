@@ -1,0 +1,72 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <title>Meeper</title>
+</head>
+<body class="h-full flex flex-col bg-bluegray-100 overflow-hidden">
+
+    <i class="z-10 fixed bottom-5 right-5 md:invisible bg-teal-500 p-3 text-2xl rounded-full text-white fas fa-feather"></i>
+    
+    <header class="fixed w-full z-10 bg-teal-600 flex flex-col p-4 border-b border-3 border-teal-700 text-white shadow-md">
+        <div class="flex flex-row justify-between items-center">
+            <div>
+                <a href="{% url 'home' %}">
+                    <p class="text-2xl font-nunito font-bold"><i class="fas fa-kiwi-bird"></i> Meeper</p>
+                </a>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="hidden md:block">
+                <p class="inline mr-3 transition-all duration-100 ease-linear">Bienvenido, {{ request.user.username }}</p>
+                <a class="p-3 hover:text-teal-300 transition-all ease-linear duration-100" href="{% url 'cerrar-sesion' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+            {% else %}
+            <div class="hidden md:block">
+                <a href="{% url 'iniciar-sesion' %}" class="mr-3 hover:text-teal-300 transition-all duration-100 ease-linear">Iniciar Sesión</a>
+                <a  href="{% url 'crear-cuenta' %}" class="p-3 border-2 border-white rounded-3xl hover:text-teal-700 hover:bg-white transition-all ease-linear duration-100">Crear Cuenta</a>
+            </div>
+            {% endif %}
+            <div class="block md:hidden">
+                <i class="cursor-pointer text-white text-3xl fas fa-bars" id="botonHiddenMenu"></i>
+            </div>
+        </div>
+        <div class="hidden" id="hiddenMenu">
+            {% if request.user.is_authenticated %}
+            <div class="md:hidden hover:bg-teal-700 flex flex-col mt-3">
+                <a class="p-3 text-center hover:text-teal-300 transition-all ease-linear duration-100" href="{% url 'cerrar-sesion' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+            {% else %}
+            <div class="md:hidden  flex flex-col mt-3">
+                <a class="p-3 text-center hover:bg-teal-700 hover:text-teal-300 transition-all ease-linear duration-100" href="{% url 'iniciar-sesion' %}"> Iniciar Sesión</a>
+                <a class="p-3 text-center border-2 border-white hover:bg-teal-700 hover:text-teal-300 transition-all ease-linear duration-100" href="{% url 'crear-cuenta' %}"> Crear Cuenta</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <section class="h-auto overflow-auto">
+    {% block content %}
+    
+    {% endblock content %}
+    </section>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e323a62359.js" crossorigin="anonymous"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static "js/main.js" %}"></script>
+</body>
+</html>

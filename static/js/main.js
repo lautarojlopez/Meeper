@@ -58,6 +58,7 @@ document.addEventListener('keyup', function(e) {
 })
 
 document.addEventListener('click', function(e) {
+
     if(e.target.classList.contains('desactivado')){
         e.preventDefault()
     }
@@ -81,7 +82,8 @@ document.addEventListener('click', function(e) {
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-              axios.get(`post/eliminar/${e.target.dataset.postid}`)
+                console.log(`${location.origin}/post/eliminar/${e.target.dataset.postid}`);
+              axios.get(`${location.origin}/post/eliminar/${e.target.dataset.postid}`)
                 .then(function (response) {
                     e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove()
                     console.log(response);
@@ -102,4 +104,10 @@ document.addEventListener('click', function(e) {
             }
           })
     }
+})
+
+botonMenu = document.querySelector('#botonHiddenMenu')
+botonMenu.addEventListener('click', function(e) {
+    hiddenMenu = document.querySelector('#hiddenMenu')
+    hiddenMenu.classList.toggle('hidden')
 })

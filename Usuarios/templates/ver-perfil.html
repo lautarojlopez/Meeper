@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+        <div class="flex flex-col lg:flex-row lg:items-start items-center h-full overflow-auto">
+            <!-- USER CARD -->
+            <div class="w-11/12 md:w-10/12 lg:w-8/12 xl:w-4/12 md:block mt-20 lg:ml-5">
+                <div class="border shadow rounded-lg w-auto bg-white">
+                    <div class="flex items-center">
+                        <img class="m-3 object-cover w-20 h-20 rounded-full" src="{{ user.perfil.img.url }}" alt="">
+                        <div class="flex flex-col">
+                            <p>{{ user.first_name }}</p>
+                            <p class="text-gray-400 shadow-2xl">@{{ user.username }}</p>
+                        </div>
+                    </div>
+                    <p class="p-3 text-gray-600">{{ user.perfil.bio }}</p>
+                    <div class="border-t py-3 px-5 bg-gray-100">
+                        <div class="flex justify-between">
+                            <div class="flex flex-col">
+                                <p class="text-gray-400">Meeps</p>
+                                <p>1</p>
+                            </div>
+                            <div class="flex flex-col">
+                                <p class="text-gray-400">Seguidos</p>
+                                <p>1</p>
+                            </div>
+                            <div class="flex flex-col">
+                                <p class="text-gray-400">Seguidores</p>
+                                <p>1</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN USER CARD -->
+
+            <!-- CONTENIDO -->
+            <div class="order-last lg:order-none lg:mt-20 lg:mx-5 w-11/12 md:w-10/12 lg:w-8/12 xl:w-6/12">
+                {% for post in posts %}
+                    <!-- Tweet -->
+                    <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
+                        <div class="flex items-center">
+                            <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="{{ post.user.perfil.img.url }}" alt="">
+                            <div class="flex flex-col">
+                                <p>{{ post.user.first_name }}</p>
+                                <p class="text-gray-400">@{{ post.user.username }}</p>
+                            </div>
+                            {% if post.user == request.user %}
+                                <div class="relative -top-5 w-full flex justify-end p-5">
+                                    <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                                    <div class="hidden transition-all duration-100 ease-linear absolute rounded top-10 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                                        <ul>
+                                            <li>
+                                                <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarPost" data-postid="{{ post.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% else %}
+                            {% endif %}
+                            
+                        </div>
+                        <p class="px-5 text-gray-400">{{ post.timestamp|naturaltime }}</p>
+                        <p class="px-5">{{ post.content }}</p>
+                        <div class="p-5 m-0 border-t border-gray-200 mt-3 bg-gray-100">
+                            <p class="text-sm text-gray-400">Comentar</p>
+                            <textarea id="mensaje" name="" id="" cols="30" rows="1" class="px-3 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2 transition-all ease-linear duration-100" placeholder="Escribe un comentario..."></textarea>
+                            <div class="flex justify-between">
+                                <button id="botonEnviar" class="desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
+                                <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin Tweet -->
+                {% endfor %}
+                
+                <!-- Tweet -->
+                <div class="border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
+                    <div class="flex items-center">
+                        <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                        <div class="flex flex-col">
+                            <p>Usuario</p>
+                            <p class="text-gray-400">@username</p>
+                        </div>
+                    </div>
+                    <p class="px-5 text-gray-400">Hace 5 minutos</p>
+                    <p class="px-5">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia quibusdam illo sit blanditiis incidunt consectetur ratione ipsam facere ipsum omnis quod rerum repellendus, alias debitis! Reiciendis, quidem! Voluptatum, consectetur aperiam?</p>
+                    <!-- COMENTARIOS -->
+                    <div class="mt-2">
+                        <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
+                            <div class="flex items-center text-sm px-5">
+                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                                <div class="flex flex-col">
+                                    <p>Usuario</p>
+                                    <p class="text-gray-400">@username</p>
+                                </div>
+                            </div>
+                            <p class="px-5 text-gray-400 text-sm">Hace 5 minutos</p>
+                            <p class="px-5 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio aliquid eligendi illum rem cumque? Esse ut quasi est ad porro? Dolores sit impedit ratione voluptas voluptatibus minima omnis id minus?</p>
+                        </div>
+                        <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
+                            <div class="flex items-center text-sm px-5">
+                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                                <div class="flex flex-col">
+                                    <p>Usuario</p>
+                                    <p class="text-gray-400">@username</p>
+                                </div>
+                            </div>
+                            <p class="px-5 text-gray-400 text-sm">Hace 5 minutos</p>
+                            <p class="px-5 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio aliquid eligendi illum rem cumque? Esse ut quasi est ad porro? Dolores sit impedit ratione voluptas voluptatibus minima omnis id minus?</p>
+                        </div>
+                    </div>
+                    <!-- FIN COMENTARIOS -->
+                    <div class="p-5 m-0 border-t border-gray-200 bg-gray-100">
+                        <p class="text-sm text-gray-400">Comentar</p>
+                        <textarea id="mensaje" name="" id="" cols="30" rows="1" class="px-3 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2 transition-all ease-linear duration-100" placeholder="Escribe un comentario..."></textarea>
+                        <div class="flex justify-between">
+                            <button id="botonEnviar" class="desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
+                            <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin Tweet -->
+
+            </div>
+            <!-- FIN CONTENIDO -->
+
+            <!-- A QUIEN SEGUIR -->
+            <div class="mt-5 my-5 w-11/12 md:w-10/12 lg:mt-20 lg:w-8/12 xl:w-4/12 md:block lg:mr-5">
+                <div class="border shadow rounded-lg w-auto bg-white">
+                    <h3 class="text-center bg-gray-200 text-gray-400 py-2">A quien seguir</h3>
+                    <div class="py-1 border-b border-gray-200">
+                        <div class="flex items-center text-sm px-5">
+                            <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                            <div class="flex flex-col">
+                                <p>Usuario</p>
+                                <p class="text-gray-400">@username</p>
+                            </div>
+                            <div class="flex justify-end w-full">
+                                <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-1 border-b border-gray-200">
+                        <div class="flex items-center text-sm px-5">
+                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                                <div class="flex flex-col">
+                                    <p>Usuario</p>
+                                    <p class="text-gray-400">@username</p>
+                                </div>
+                                <div class="flex justify-end w-full">
+                                    <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="py-1 border-gray-200">
+                        <div class="flex items-center text-sm px-5">
+                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                                <div class="flex flex-col">
+                                    <p>Usuario</p>
+                                    <p class="text-gray-400">@username</p>
+                                </div>
+                                <div class="flex justify-end w-full">
+                                    <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN A QUIEN SEGUIR -->
+
+        </div>
+{% endblock content %}
