@@ -82,7 +82,6 @@ document.addEventListener('click', function(e) {
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-                console.log(`${location.origin}/post/eliminar/${e.target.dataset.postid}`);
               axios.get(`${location.origin}/post/eliminar/${e.target.dataset.postid}`)
                 .then(function (response) {
                     e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove()
@@ -104,6 +103,55 @@ document.addEventListener('click', function(e) {
             }
           })
     }
+
+    if(e.target.classList.contains('enviarComentario') && e.target.classList.contains('activo')){
+        let post = e.target.parentElement.parentElement.parentElement.parentElement
+        axios({
+            method: 'post',
+            url: `${location.origin}/post/${post.querySelector('#post_id').value}/comentar/`,
+            data: {
+              'content': post.querySelector('#mensaje').value
+            },
+            headers: {
+              "X-CSRFToken": post.querySelector('input[name="csrfmiddlewaretoken"]').value, 
+              "content-type": "application/x-www-form-urlencode"
+            }
+          }).then(function (response) {
+            let div = document.createElement('div')
+            let HTML = `
+            <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
+                <div class="flex items-center text-sm px-5">
+                    <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="${response.data.img}" alt="">
+                    <div class="flex flex-col">
+                        <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                            <p>${response.data.nombre}</p>
+                        </a>
+                        <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                            <p class="text-gray-400">@${response.data.username}</p>
+                        </a>
+                    </div>
+                </div>
+                <p class="px-5 text-gray-400 text-sm">hace un segundo</p>
+                <p class="px-5 text-sm">${response.data.content}</p>
+            </div>
+            `
+            div.innerHTML = HTML
+            post.querySelector('#comentarios').appendChild(div)
+
+            //Vaciar textarea y deshabilitar boton
+            post.querySelector('#mensaje').value = ''
+            e.target.classList.add('desactivado')
+            e.target.classList.remove('activo')
+            e.target.classList.remove('bg-teal-500')
+            e.target.classList.add('bg-gray-300')
+            e.target.classList.remove('cursor-pointer')
+            e.target.classList.add('cursor-auto')
+            post.querySelector('#contador').innerHTML= 0
+            
+          }).catch(function (error) {
+            console.log(error)
+          });
+            }
 })
 
 botonMenu = document.querySelector('#botonHiddenMenu')

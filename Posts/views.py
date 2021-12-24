@@ -1,7 +1,9 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from .models import Post
+from .models import Comentario, Post
 from .forms import FormPost
+import json
+
 
 # Create your views here.
 def nuevo_post(request):
@@ -26,3 +28,18 @@ def eliminar_post(request, id):
             return HttpResponse("error", status=500)
     else:
         return HttpResponse("error", status=500)
+
+def comentar(request, post_id):
+    if request.method == "POST":
+        comentario = Comentario()
+        comentario.content = json.loads(request.body.decode('utf-8'))['content']
+        comentario.autor = request.user
+        comentario.post = Post.objects.get(id=post_id)
+        comentario.save()
+        datos = {
+            'username': request.user.username,
+            'nombre': request.user.first_name,
+            'img': request.user.perfil.img.url,
+            'content': comentario.content,
+        }
+        return HttpResponse(json.dumps(datos))
