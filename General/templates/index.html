@@ -61,7 +61,7 @@
                     <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
                         <div class="flex items-center">
                                 <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="{{ post.user.perfil.img.url }}" alt="">
-                            <div class="flex flex-col">
+                            <div class="flex flex-col w-full">
                                 <a href="{% url 'ver-perfil' post.user.username %}">
                                     <p>{{ post.user.first_name }}</p>
                                 </a>
@@ -93,7 +93,7 @@
                                     <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
                                         <div class="flex items-center text-sm px-5">
                                             <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="{{ comentario.autor.perfil.img.url }}" alt="">
-                                            <div class="flex flex-col">
+                                            <div class="flex flex-col w-full">
                                                 <a href="{% url 'ver-perfil' comentario.autor.username %}">
                                                     <p>{{ comentario.autor.first_name }}</p>
                                                 </a>
@@ -101,6 +101,21 @@
                                                     <p class="text-gray-400">@{{ comentario.autor.username }}</p>
                                                 </a>
                                             </div>
+                                            {% if comentario.autor == request.user %}
+                                                <div class="relative -top-5 w-full flex justify-end">
+                                                    <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                                                    <div class="hidden transition-all duration-100 ease-linear absolute rounded top-5 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                                                        <form action="javascript:void(0);" method="POST">
+                                                            <ul>
+                                                                <li>
+                                                                    <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarComentario" data-comentarioid="{{ comentario.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                                                </li>
+                                                            </ul>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                            {% endif %}
                                         </div>
                                         <p class="px-5 text-gray-400 text-sm">{{ comentario.timestamp|naturaltime }}</p>
                                         <p class="px-5 text-sm">{{ comentario.content }}</p>

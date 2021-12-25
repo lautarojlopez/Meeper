@@ -72,6 +72,7 @@ document.addEventListener('click', function(e) {
     //Eliminar Post
     if(e.target.id == "eliminarPost"){
         Swal.fire({
+            heightAuto: false,
             title: '¿Estás seguro?',
             text: "Esta acción no se podrá revertir.",
             icon: 'warning',
@@ -82,18 +83,16 @@ document.addEventListener('click', function(e) {
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-              axios.get(`${location.origin}/post/eliminar/${e.target.dataset.postid}`)
+              axios.delete(`${location.origin}/post/eliminar/${e.target.dataset.postid}`)
                 .then(function (response) {
                     e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.remove()
-                    console.log(response);
-                    Swal.fire(
-                        'Eliminado',
-                        '',
-                        'success'
-                      )
+                    Swal.fire({
+                        heightAuto: false,
+                        title: "Post eliminado",
+                        icon: "success"
+                    })
                 })
                 .catch(function (error) {
-                    console.log(error);
                     Swal.fire(
                         'XD?',
                         '',
@@ -104,6 +103,7 @@ document.addEventListener('click', function(e) {
           })
     }
 
+    //Enviar comentario
     if(e.target.classList.contains('enviarComentario') && e.target.classList.contains('activo')){
         let post = e.target.parentElement.parentElement.parentElement.parentElement
         axios({
@@ -122,13 +122,23 @@ document.addEventListener('click', function(e) {
             <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
                 <div class="flex items-center text-sm px-5">
                     <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="${response.data.img}" alt="">
-                    <div class="flex flex-col">
-                        <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                    <div class="flex flex-col w-full">
+                        <a href="${location.origin}/@${response.data.username}">
                             <p>${response.data.nombre}</p>
                         </a>
-                        <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                        <a href="${location.origin}/@${response.data.username}">
                             <p class="text-gray-400">@${response.data.username}</p>
                         </a>
+                    </div>
+                    <div class="relative -top-5 w-full flex justify-end">
+                        <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                        <div class="hidden transition-all duration-100 ease-linear absolute rounded top-5 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                            <ul>
+                                <li>
+                                    <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarComentario" data-comentarioid="${response.data.id}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <p class="px-5 text-gray-400 text-sm">hace un segundo</p>
@@ -149,9 +159,52 @@ document.addEventListener('click', function(e) {
             post.querySelector('#contador').innerHTML= 0
             
           }).catch(function (error) {
-            console.log(error)
+            Swal.fire(
+                'Ups... ha ocurrido un error',
+                'Intentalo nuevamente',
+                'error'
+              )
           });
             }
+
+    //Eliminar Comentario
+    if(e.target.id == "eliminarComentario"){
+        let comentario = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+        Swal.fire({
+            heightAuto: false,
+            title: '¿Estás seguro?',
+            text: "Esta acción no se podrá revertir.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0d9488',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                axios({
+                    method: 'delete',
+                    url: `${location.origin}/post/comentario/${e.target.dataset.comentarioid}/eliminar/`,
+                    data: {
+                    },
+                    headers: {
+                      "content-type": "application/x-www-form-urlencode"
+                    }
+                  })
+                  .then(function(response) {
+                        comentario.remove()
+                        Swal.fire({
+                            heightAuto: false,
+                            title: "Comentario eliminado",
+                            icon: "success"
+                        })
+                  })
+                  .catch(function(error) {
+                      
+                  })
+            }
+          })
+    }
 })
 
 botonMenu = document.querySelector('#botonHiddenMenu')
