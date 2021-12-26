@@ -10,4 +10,6 @@ urlpatterns = [
     path('editar-perfil', editar_perfil, name="editar-perfil"),
     path('follow/<username>', follow, name="follow"),
     path('unfollow/<username>', unfollow, name="unfollow"),
+    path('notificaciones/', ver_notificaciones, name="notificaciones"),
+    path('notificaciones/leer/', leer_notificaciones)
 ]

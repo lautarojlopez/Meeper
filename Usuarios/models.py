@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Posts.models import *
+from itertools import chain
 
 # Create your models here.
 class Perfil(models.Model):
@@ -22,6 +23,13 @@ class Perfil(models.Model):
     def likes(self):
         posts_ids = Like.objects.filter(user=self.user).values_list('post_id', flat=True)
         return Post.objects.filter(id__in=posts_ids)
+    
+    def notificaciones(self):
+        return Notificacion.objects.get(to_user=self.user)
+    
+    def notificaciones_no_leidas(self):
+        notif = Notificacion.objects.filter(to_user=self.user, leida=False)
+        return notif
 
     class Meta:
         verbose_name_plural = 'Perfiles'
@@ -35,3 +43,20 @@ class Relacion(models.Model):
 
     def __str__(self) -> str:
         return f'{self.from_user} sigue a {self.to_user}'
+
+class Notificacion(models.Model):
+    to_user = models.ForeignKey(User, related_name='notificaciones', on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, related_name='notificaciones_from', on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=15)
+    post = models.ForeignKey(Post, related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    comentario = models.ForeignKey(Comentario, related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    like = models.ForeignKey(Like, related_name='+', on_delete=models.CASCADE, blank=True, null=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+    leida = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "Notificaciones"
+        ordering = ['-timestamp']
+    
+    def __str__(self) -> str:
+        return f'Notificacion de {self.from_user} para {self.to_user} - {self.tipo}'

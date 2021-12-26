@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
+
+from Usuarios.models import Notificacion
 from .models import Comentario, Like, Post
 from .forms import FormPost
 import json
@@ -54,6 +56,12 @@ def comentar(request, post_id):
                 'content': comentario.content,
                 'id': comentario.id,
             }
+            if comentario.post.user != request.user:
+                try:
+                    notificacion = Notificacion(from_user=request.user, to_user=comentario.post.user, tipo="comentario", comentario=comentario, post=comentario.post)
+                    notificacion.save()
+                except:
+                    return HttpResponse(500)
             return HttpResponse(json.dumps(datos))
         except:
             return HttpResponse(500)
@@ -68,6 +76,12 @@ def eliminar_comentario(request, comentario_id):
         if comentario.autor == request.user:
             try:
                 comentario.delete()
+                if comentario.post.user != request.user:
+                    try:
+                        notificacion = Notificacion.objects.get(from_user=request.user, to_user=comentario.post.user, tipo="comentario", comentario=comentario, post=comentario.post)
+                        notificacion.delete()
+                    except:
+                        return HttpResponse(500)
                 return HttpResponse(200)
             except:
                 return HttpResponse(500)
@@ -84,6 +98,12 @@ def like(request, post_id):
             post = Post.objects.get(id=post_id)
             like = Like(user=request.user, post=post)
             like.save()
+            if post.user != request.user:
+                try:
+                    notificacion = Notificacion(from_user=request.user, to_user=post.user, tipo="like", like=like)
+                    notificacion.save()
+                except:
+                    return HttpResponse(500)
             return HttpResponse(200)
         except:
             return HttpResponse(500)

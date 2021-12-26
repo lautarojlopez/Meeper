@@ -1,7 +1,7 @@
 from django import http
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
-from Usuarios.models import Perfil, Relacion
+from Usuarios.models import Notificacion, Perfil, Relacion
 from .forms import FormEditarPerfil, FormEditarUsuario, UserRegisterForm
 from django.contrib.auth.models import User
 from Posts.models import Post
@@ -59,6 +59,8 @@ def follow(request, username):
             user = User.objects.get(username=username)
             follow = Relacion(from_user=request.user, to_user=user)
             follow.save()
+            notificacion = Notificacion(from_user=request.user, to_user=user, tipo="follow")
+            notificacion.save()
             return HttpResponse(200)
         except:
             return HttpResponse(500)
@@ -73,6 +75,25 @@ def unfollow(request, username):
             user = User.objects.get(username=username)
             follow = Relacion.objects.get(from_user=request.user, to_user=user)
             follow.delete()
+            notificacion = Notificacion.objects.get(from_user=request.user, to_user=user, tipo="follow")
+            notificacion.delete()
             return HttpResponse(200)
         except:
             return HttpResponse(500)
+
+@login_required
+def ver_notificaciones(request):
+    notificaciones = Notificacion.objects.filter(to_user=request.user)
+    return render(request, 'notificaciones.html', { 'notificaciones': notificaciones })
+
+@csrf_exempt
+@login_required
+def leer_notificaciones(request):
+    if request.method == "GET":
+        return redirect(request.META.get('HTTP_REFERER'))
+    if request.method == "POST":
+        no_leidas = Notificacion.objects.filter(to_user=request.user, leida=False)
+        for noti in no_leidas:
+            noti.leida = True
+            noti.save()
+        return HttpResponse(200)

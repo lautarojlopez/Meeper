@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+    <section class="mt-20 mx-2">
+
+        {% if notificaciones %}
+            {% for notificacion in notificaciones %}
+                {% if notificacion.tipo == "follow" %}
+                    <!-- NOTIFICACION FOLLOW -->
+                    <div class="flex justify-center">
+                        <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
+                            <div class="flex-col">
+                                    <div class="flex items-center">
+                                        <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                        <p class="text-gray-600"><span class="text-teal-500">{{ notificacion.from_user.username }}</span> te siguió.</p>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FIN NOTIFICACION FOLLOW -->
+                {% else %}
+                    {% if notificacion.tipo == "like" %}
+                        <!-- NOTIFICACION LIKE -->
+                        <div class="flex justify-center">
+                            <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
+                                <div class="flex-col">
+                                        <div class="flex items-center">
+                                            <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                            <p class="text-gray-600">A <span class="text-teal-500">{{ notificacion.from_user.username }}</span> le gustó tu post</p>
+                                        </div>
+                                        <p class="px-3 pb-3 text-gray-400">{{ notificacion.like.post.content }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- FIN NOTIFICACION LIKE -->
+                    {% else %}
+                        {% if notificacion.tipo == "comentario" %}
+                            <!-- NOTIFICACION COMENTARIO -->
+                            <div class="flex justify-center">
+                                <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
+                                    <div class="flex-col">
+                                            <div class="flex items-center">
+                                                <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                                <p class="text-gray-600"><span class="text-teal-500">{{ notificacion.from_user.username }}</span> comentó tu post</p>
+                                            </div>
+                                            <p class="px-3 pb-3">{{ notificacion.comentario.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN NOTIFICACION COMENTARIO -->
+                        {% else %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="text-gray-400 pb-5 text-center">Aún no tienes ninguna notificación</p>
+        {% endif %}
+    </section>
+
+{% endblock content %}

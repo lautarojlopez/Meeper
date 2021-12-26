@@ -17,7 +17,7 @@
 </head>
 <body class="h-full flex flex-col bg-bluegray-100 overflow-hidden">
 
-    <i class="z-10 fixed bottom-5 right-5 md:invisible bg-teal-500 p-3 text-2xl rounded-full text-white fas fa-feather"></i>
+    {% comment %} <i class="z-10 fixed bottom-5 right-5 md:invisible bg-teal-500 p-3 text-2xl rounded-full text-white fas fa-feather"></i> {% endcomment %}
     
     <header class="fixed w-full z-10 bg-teal-600 flex flex-col p-4 border-b border-3 border-teal-700 text-white shadow-md">
         <div class="flex flex-row justify-between items-center">
@@ -29,6 +29,14 @@
             {% if request.user.is_authenticated %}
             <div class="hidden md:block">
                 <p class="inline mr-3 transition-all duration-100 ease-linear">Bienvenido, {{ request.user.username }}</p>
+                {% if request.user.perfil.notificaciones_no_leidas %}
+                    <a href="{% url 'notificaciones' %}">
+                        <i class="text-yellow-300 text-xl mx-2 fas fa-bell"></i>
+                        <span class="border-2 border-white relative -top-1.5 -left-5 inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'notificaciones' %}"><i class="text-xl mx-2 far fa-bell"></i></a>
+                {% endif %}
                 <a class="p-3 hover:text-teal-300 transition-all ease-linear duration-100" href="{% url 'cerrar-sesion' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
             </div>
             {% else %}

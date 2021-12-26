@@ -250,9 +250,8 @@ document.addEventListener('click', function(e) {
 
     //Like
     if(e.target.id == "likeButton"){
-        let post = e.target.parentElement.parentElement.parentElement.parentElement
+        let post = e.target.parentElement.parentElement.parentElement
         let boton = e.target.parentElement
-        console.log(boton);
         post_id = post.querySelector('#post_id').value
         axios({
             method: 'POST',
@@ -279,9 +278,8 @@ document.addEventListener('click', function(e) {
 
         //Dislike
         if(e.target.id == "dislikeButton"){
-            let post = e.target.parentElement.parentElement.parentElement.parentElement
+            let post = e.target.parentElement.parentElement.parentElement
             let boton = e.target.parentElement
-            console.log(boton);
             post_id = post.querySelector('#post_id').value
             axios({
                 method: 'POST',
@@ -306,10 +304,31 @@ document.addEventListener('click', function(e) {
                   )
             })
         }
+
+        if(e.target.id == "commentButton"){
+            let post = e.target.parentElement.parentElement.parentElement
+            let textarea = post.querySelector('textarea')
+            textarea.focus()
+        }
 })
 
 botonMenu = document.querySelector('#botonHiddenMenu')
 botonMenu.addEventListener('click', function(e) {
     hiddenMenu = document.querySelector('#hiddenMenu')
     hiddenMenu.classList.toggle('hidden')
+})
+
+document.addEventListener('DOMContentLoaded', () =>{
+
+    if(location.pathname == '/notificaciones/'){
+        axios({
+            method: 'POST',
+            url: `${location.origin}/notificaciones/leer/`
+        })
+        .then( (response) => {
+        })
+        .catch( (error) => {
+        })
+    }
+
 })
