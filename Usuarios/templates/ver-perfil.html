@@ -25,6 +25,15 @@
                                 <a href="{% url 'editar-perfil' %}" class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Editar Perfil</a>
                             </div>
                         {% else %}
+                            {% if user in request.user.perfil.siguiendo %}
+                                <div class="flex justify-end pr-5">
+                                    <button id="unfollowButton" data-username={{ user.username }} class="border-2 bg-teal-500 border-teal-500 text-white p-2 rounded-full hover:bg-red-500 hover:border-red-700 hover:text-white transition-all ease-linear duration-100">Dejar de seguir</button>
+                                </div>
+                            {% else %}
+                                <div class="flex justify-end pr-5">
+                                    <button id="followButton" data-username={{ user.username }} class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
+                                </div>
+                            {% endif %}
                         {% endif %}
                         
                     </div>
@@ -36,11 +45,11 @@
                             </div>
                             <div class="flex flex-col">
                                 <p class="text-gray-400">Seguidos</p>
-                                <p>1</p>
+                                <p>{{ user.perfil.siguiendo.count }}</p>
                             </div>
                             <div class="flex flex-col">
                                 <p class="text-gray-400">Seguidores</p>
-                                <p>1</p>
+                                <p>{{ user.perfil.seguidores.count }}</p>
                             </div>
                         </div>
                     </div>
@@ -64,139 +73,99 @@
 
             <!-- CONTENIDO -->
             <div class="order-last lg:order-none lg:mt-20 lg:mx-5 w-11/12 md:w-10/12 lg:w-8/12 xl:w-6/12">
-                {% for post in posts %}
-                    <!-- Tweet -->
-                    <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
-                        <div class="flex items-center">
-                                <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="{{ post.user.perfil.img.url }}" alt="">
-                            <div class="flex flex-col w-full">
-                                <a href="{% url 'ver-perfil' post.user.username %}">
-                                    <p>{{ post.user.first_name }}</p>
-                                </a>
-                                <a href="{% url 'ver-perfil' post.user.username %}">
-                                    <p class="text-gray-400">@{{ post.user.username }}</p>
-                                </a>
-                            </div>
-                            {% if post.user == request.user %}
-                                <div class="relative -top-5 w-full flex justify-end p-5">
-                                    <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
-                                    <div class="hidden transition-all duration-100 ease-linear absolute rounded top-10 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
-                                        <ul>
-                                            <li>
-                                                <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarPost" data-postid="{{ post.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                {% if posts %}
+                    {% for post in posts %}
+                        <!-- Tweet -->
+                        <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
+                            <div class="flex items-center">
+                                    <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="{{ post.user.perfil.img.url }}" alt="">
+                                <div class="flex flex-col w-full">
+                                    <a href="{% url 'ver-perfil' post.user.username %}">
+                                        <p>{{ post.user.first_name }}</p>
+                                    </a>
+                                    <a href="{% url 'ver-perfil' post.user.username %}">
+                                        <p class="text-gray-400">@{{ post.user.username }}</p>
+                                    </a>
                                 </div>
+                                {% if post.user == request.user %}
+                                    <div class="relative -top-5 w-full flex justify-end p-5">
+                                        <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                                        <div class="hidden transition-all duration-100 ease-linear absolute rounded top-10 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                                            <ul>
+                                                <li>
+                                                    <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarPost" data-postid="{{ post.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                {% endif %}
+                                
+                            </div>
+                            <p class="px-5 text-gray-400">{{ post.timestamp|naturaltime }}</p>
+                            <p class="px-5 pb-3">{{ post.content }}</p>
+                            <div class="flex justify-start ml-2">
+                                <button class="pb-2 pl-3 text-md transition-all ease-linear duration-100 text-gray-400 hover:text-red-600"><i id="likeButton" class="far fa-heart"></i> <span class="cursor-auto">{{ post.likes.count }}</span></button>
+                            </div>
+                            <div id="comentarios">
+                            {% if post.comentarios.all %}
+                                {% for comentario in post.comentarios.all %}
+                                    <!-- COMENTARIOS -->
+                                        <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
+                                            <div class="flex items-center text-sm px-5">
+                                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="{{ comentario.autor.perfil.img.url }}" alt="">
+                                                <div class="flex flex-col w-full">
+                                                    <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                                                        <p>{{ comentario.autor.first_name }}</p>
+                                                    </a>
+                                                    <a href="{% url 'ver-perfil' comentario.autor.username %}">
+                                                        <p class="text-gray-400">@{{ comentario.autor.username }}</p>
+                                                    </a>
+                                                </div>
+                                                {% if comentario.autor == request.user %}
+                                                    <div class="relative -top-5 w-full flex justify-end">
+                                                        <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
+                                                        <div class="hidden transition-all duration-100 ease-linear absolute rounded top-5 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
+                                                            <form action="javascript:void(0);" method="POST">
+                                                                {% csrf_token %}
+                                                                <ul>
+                                                                    <li>
+                                                                        <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarComentario" data-comentarioid="{{ comentario.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
+                                                                    </li>
+                                                                </ul>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}
+                                            </div>
+                                            <p class="px-5 text-gray-400 text-sm">{{ comentario.timestamp|naturaltime }}</p>
+                                            <p class="px-5 text-sm">{{ comentario.content }}</p>
+                                        </div>
+                                    <!-- FIN COMENTARIOS -->
+                                {% endfor %}
                             {% else %}
                             {% endif %}
-                            
                         </div>
-                        <p class="px-5 text-gray-400">{{ post.timestamp|naturaltime }}</p>
-                        <p class="px-5 pb-3">{{ post.content }}</p>
-                        <div id="comentarios">
-                        {% if post.comentarios.all %}
-                            {% for comentario in post.comentarios.all %}
-                                <!-- COMENTARIOS -->
-                                    <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
-                                        <div class="flex items-center text-sm px-5">
-                                            <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="{{ comentario.autor.perfil.img.url }}" alt="">
-                                            <div class="flex flex-col w-full">
-                                                <a href="{% url 'ver-perfil' comentario.autor.username %}">
-                                                    <p>{{ comentario.autor.first_name }}</p>
-                                                </a>
-                                                <a href="{% url 'ver-perfil' comentario.autor.username %}">
-                                                    <p class="text-gray-400">@{{ comentario.autor.username }}</p>
-                                                </a>
-                                            </div>
-                                            {% if comentario.autor == request.user %}
-                                                <div class="relative -top-5 w-full flex justify-end">
-                                                    <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
-                                                    <div class="hidden transition-all duration-100 ease-linear absolute rounded top-5 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
-                                                        <form action="javascript:void(0);" method="POST">
-                                                            {% csrf_token %}
-                                                            <ul>
-                                                                <li>
-                                                                    <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarComentario" data-comentarioid="{{ comentario.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
-                                                                </li>
-                                                            </ul>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            {% else %}
-                                            {% endif %}
-                                        </div>
-                                        <p class="px-5 text-gray-400 text-sm">{{ comentario.timestamp|naturaltime }}</p>
-                                        <p class="px-5 text-sm">{{ comentario.content }}</p>
+                            <div class="p-5 m-0 border-t border-gray-200 bg-gray-100">
+                                <form action="javascript:void(0);" method="POST">
+                                {% csrf_token %}
+                                    <input type="hidden" id="post_id" value="{{ post.id }}">
+                                    <p class="text-sm text-gray-400">Comentar</p>
+                                    <textarea id="mensaje" name="comentario" id="" cols="30" rows="1" class="px-3 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2 transition-all ease-linear duration-100" placeholder="Escribe un comentario..."></textarea>
+                                    <div class="flex justify-between">
+                                        <button type="submit" id="botonEnviar" class="enviarComentario desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
+                                        <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
                                     </div>
-                                <!-- FIN COMENTARIOS -->
-                            {% endfor %}
-                        {% else %}
-                        {% endif %}
-                    </div>
-                        <div class="p-5 m-0 border-t border-gray-200 bg-gray-100">
-                            <form action="javascript:void(0);" method="POST">
-                            {% csrf_token %}
-                                <input type="hidden" id="post_id" value="{{ post.id }}">
-                                <p class="text-sm text-gray-400">Comentar</p>
-                                <textarea id="mensaje" name="comentario" id="" cols="30" rows="1" class="px-3 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2 transition-all ease-linear duration-100" placeholder="Escribe un comentario..."></textarea>
-                                <div class="flex justify-between">
-                                    <button type="submit" id="botonEnviar" class="enviarComentario desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
-                                    <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Fin Tweet -->
-                {% endfor %}
+                        <!-- Fin Tweet -->
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-400 text-center">Nada para mostrar aún</p>
+                {% endif %}
                 
-                <!-- Tweet -->
-                <div class="border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
-                    <div class="flex items-center">
-                        <img class="relative m-3 object-cover w-16 h-16 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
-                        <div class="flex flex-col">
-                            <p>Usuario</p>
-                            <p class="text-gray-400">@username</p>
-                        </div>
-                    </div>
-                    <p class="px-5 text-gray-400">Hace 5 minutos</p>
-                    <p class="px-5">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia quibusdam illo sit blanditiis incidunt consectetur ratione ipsam facere ipsum omnis quod rerum repellendus, alias debitis! Reiciendis, quidem! Voluptatum, consectetur aperiam?</p>
-                    <!-- COMENTARIOS -->
-                    <div class="mt-2">
-                        <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
-                            <div class="flex items-center text-sm px-5">
-                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
-                                <div class="flex flex-col">
-                                    <p>Usuario</p>
-                                    <p class="text-gray-400">@username</p>
-                                </div>
-                            </div>
-                            <p class="px-5 text-gray-400 text-sm">Hace 5 minutos</p>
-                            <p class="px-5 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio aliquid eligendi illum rem cumque? Esse ut quasi est ad porro? Dolores sit impedit ratione voluptas voluptatibus minima omnis id minus?</p>
-                        </div>
-                        <div class="border-t bg-gray-50 p-3 border-gray-200 w-full">
-                            <div class="flex items-center text-sm px-5">
-                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
-                                <div class="flex flex-col">
-                                    <p>Usuario</p>
-                                    <p class="text-gray-400">@username</p>
-                                </div>
-                            </div>
-                            <p class="px-5 text-gray-400 text-sm">Hace 5 minutos</p>
-                            <p class="px-5 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio aliquid eligendi illum rem cumque? Esse ut quasi est ad porro? Dolores sit impedit ratione voluptas voluptatibus minima omnis id minus?</p>
-                        </div>
-                    </div>
-                    <!-- FIN COMENTARIOS -->
-                    <div class="p-5 m-0 border-t border-gray-200 bg-gray-100">
-                        <p class="text-sm text-gray-400">Comentar</p>
-                        <textarea id="mensaje" name="" id="" cols="30" rows="1" class="px-3 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none w-full p-2 transition-all ease-linear duration-100" placeholder="Escribe un comentario..."></textarea>
-                        <div class="flex justify-between">
-                            <button id="botonEnviar" class="desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
-                            <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Fin Tweet -->
 
             </div>
             <!-- FIN CONTENIDO -->

@@ -1,9 +1,12 @@
+from django import http
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
-from Usuarios.models import Perfil
+from Usuarios.models import Perfil, Relacion
 from .forms import FormEditarPerfil, FormEditarUsuario, UserRegisterForm
 from django.contrib.auth.models import User
 from Posts.models import Post
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def crear_cuenta(request):
@@ -45,3 +48,31 @@ def editar_perfil(request):
                 return redirect('ver-perfil', username=request.user.username)
             except Exception as e:
                 print(e)
+
+@login_required
+@csrf_exempt
+def follow(request, username):
+    if request.method == "GET":
+        return redirect(request.META.get('HTTP_REFERER'))
+    if request.method == "POST":
+        try:
+            user = User.objects.get(username=username)
+            follow = Relacion(from_user=request.user, to_user=user)
+            follow.save()
+            return HttpResponse(200)
+        except:
+            return HttpResponse(500)
+
+@login_required
+@csrf_exempt
+def unfollow(request, username):
+    if request.method == "GET":
+        return redirect(request.META.get('HTTP_REFERER'))
+    if request.method == "POST":
+        try:
+            user = User.objects.get(username=username)
+            follow = Relacion.objects.get(from_user=request.user, to_user=user)
+            follow.delete()
+            return HttpResponse(200)
+        except:
+            return HttpResponse(500)

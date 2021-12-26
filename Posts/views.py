@@ -1,6 +1,7 @@
-from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
-from .models import Comentario, Post
+from django.contrib.auth.decorators import login_required
+from django.http.response import HttpResponse
+from django.shortcuts import redirect
+from .models import Comentario, Like, Post
 from .forms import FormPost
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -41,6 +42,8 @@ def comentar(request, post_id):
         try:
             comentario = Comentario()
             comentario.content = json.loads(request.body.decode('utf-8'))['content']
+            if len(comentario.content) > 280:
+                return HttpResponse(500)
             comentario.autor = request.user
             comentario.post = Post.objects.get(id=post_id)
             comentario.save()
@@ -55,10 +58,11 @@ def comentar(request, post_id):
         except:
             return HttpResponse(500)
 
+@login_required
 @csrf_exempt
 def eliminar_comentario(request, comentario_id):
     if request.method == "GET":
-        return redirect('home')
+        return redirect(request.META.get('HTTP_REFERER'))
     if request.method == "DELETE":
         comentario = Comentario.objects.get(id=comentario_id)
         if comentario.autor == request.user:
@@ -68,4 +72,32 @@ def eliminar_comentario(request, comentario_id):
             except:
                 return HttpResponse(500)
         else:
+            return HttpResponse(500)
+
+@login_required
+@csrf_exempt
+def like(request, post_id):
+    if request.method == "GET":
+        return redirect(request.META.get('HTTP_REFERER'))
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id)
+            like = Like(user=request.user, post=post)
+            like.save()
+            return HttpResponse(200)
+        except:
+            return HttpResponse(500)
+
+@login_required
+@csrf_exempt
+def dislike(request, post_id):
+    if request.method == "GET":
+        return redirect(request.META.get('HTTP_REFERER'))
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id)
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return HttpResponse(200)
+        except:
             return HttpResponse(500)

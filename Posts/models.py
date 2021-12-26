@@ -13,6 +13,10 @@ class Post(models.Model):
     
     def __str__(self) -> str:
         return f'{self.user.username}: {self.content}'
+    
+    def likes(self):
+        user_ids = Like.objects.filter(post=self).values_list('user_id', flat=True)
+        return User.objects.filter(id__in=user_ids)
 
 class Comentario(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
@@ -25,3 +29,10 @@ class Comentario(models.Model):
     
     def __str__(self) -> str:
         return f'Comentario de {self.autor} a {self.post.user}: {self.content}'
+
+class Like(models.Model):
+    user = models.ForeignKey(User, related_name='likes',on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='likes',on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'A {self.user.username} le gustó {self.post}'

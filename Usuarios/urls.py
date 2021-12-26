@@ -7,5 +7,7 @@ urlpatterns = [
     path('cerrar-sesion/', auth_views.LogoutView.as_view(), name="cerrar-sesion"),
     path('crear-cuenta/', crear_cuenta, name="crear-cuenta"),
     path('@<username>', ver_perfil, name="ver-perfil"),
-    path('editar-perfil', editar_perfil, name="editar-perfil")
+    path('editar-perfil', editar_perfil, name="editar-perfil"),
+    path('follow/<username>', follow, name="follow"),
+    path('unfollow/<username>', unfollow, name="unfollow"),
 ]

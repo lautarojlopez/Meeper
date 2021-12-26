@@ -205,6 +205,107 @@ document.addEventListener('click', function(e) {
             }
           })
     }
+
+    //Follow
+    if(e.target.id == "followButton"){
+        axios({
+            method: 'POST',
+            url: `${location.origin}/follow/${e.target.dataset.username}`
+        })
+        .then(function(response) {
+            e.target.innerHTML = "Dejar de seguir"
+            e.target.id = "unfollowButton"
+            e.target.classList = "border-2 bg-teal-500 border-teal-500 text-white p-2 rounded-full hover:bg-red-500 hover:border-red-700 hover:text-white transition-all ease-linear duration-100"
+        })
+        .catch(function(error) {
+            Swal.fire({
+                heightAuto: false,
+                title: "Ups... ha ocurrido un error",
+                text: "Intentalo nuevamente",
+                icon: "error"
+            })
+        })
+    }
+
+    //Unfollow
+    if(e.target.id == "unfollowButton"){
+        axios({
+            method: 'POST',
+            url: `${location.origin}/unfollow/${e.target.dataset.username}`
+        })
+        .then(function(response) {
+            e.target.innerHTML = "Seguir"
+            e.target.id = "followButton"
+            e.target.classList = "border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100"
+        })
+        .catch(function(error) {
+            Swal.fire({
+                heightAuto: false,
+                title: "Ups... ha ocurrido un error",
+                text: "Intentalo nuevamente",
+                icon: "error"
+            })
+        })
+    }
+
+    //Like
+    if(e.target.id == "likeButton"){
+        let post = e.target.parentElement.parentElement.parentElement.parentElement
+        let boton = e.target.parentElement
+        console.log(boton);
+        post_id = post.querySelector('#post_id').value
+        axios({
+            method: 'POST',
+            url: `${location.origin}/post/${post_id}/like/`
+        })
+        .then(function(response) {
+            let corazon = boton.querySelector('i')
+            corazon.classList.remove('far')
+            corazon.classList.add('fas')
+            boton.classList.remove('text-gray-400')
+            boton.classList.add('text-red-600')
+            let numero = parseInt(boton.querySelector('span').innerHTML)
+            boton.querySelector('span').innerHTML = numero + 1
+            e.target.id = "dislikeButton"
+        })
+        .catch(function(error) {
+            Swal.fire(
+                'Ups... ha ocurrido un error',
+                'Intentalo nuevamente',
+                'error'
+              )
+        })
+    }
+
+        //Dislike
+        if(e.target.id == "dislikeButton"){
+            let post = e.target.parentElement.parentElement.parentElement.parentElement
+            let boton = e.target.parentElement
+            console.log(boton);
+            post_id = post.querySelector('#post_id').value
+            axios({
+                method: 'POST',
+                url: `${location.origin}/post/${post_id}/dislike/`
+            })
+            .then(function(response) {
+                let corazon = boton.querySelector('i')
+                corazon.classList.add('far')
+                corazon.classList.remove('fas')
+                boton.classList.add('text-gray-400')
+                boton.classList.remove('text-red-600')
+                boton.classList.add('hover:text-red-600')
+                let numero = parseInt(boton.querySelector('span').innerHTML)
+                boton.querySelector('span').innerHTML = numero - 1
+                e.target.id = "likeButton"
+            })
+            .catch(function(error) {
+                Swal.fire(
+                    'Ups... ha ocurrido un error',
+                    'Intentalo nuevamente',
+                    'error'
+                  )
+            })
+        }
 })
 
 botonMenu = document.querySelector('#botonHiddenMenu')
