@@ -31,7 +31,7 @@
                 <p class="inline mr-3 transition-all duration-100 ease-linear">Bienvenido, {{ request.user.username }}</p>
                 {% if request.user.perfil.notificaciones_no_leidas %}
                     <a href="{% url 'notificaciones' %}">
-                        <i class="text-yellow-300 text-xl mx-2 fas fa-bell"></i>
+                        <i class="text-white text-xl mx-2 fas fa-bell"></i>
                         <span class="border-2 border-white relative -top-1.5 -left-5 inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                     </a>
                 {% else %}
@@ -45,7 +45,15 @@
                 <a  href="{% url 'crear-cuenta' %}" class="p-3 border-2 border-white rounded-3xl hover:text-teal-700 hover:bg-white transition-all ease-linear duration-100">Crear Cuenta</a>
             </div>
             {% endif %}
-            <div class="block md:hidden">
+            <div class="md:hidden flex items-center">
+                {% if request.user.perfil.notificaciones_no_leidas %}
+                    <a href="{% url 'notificaciones' %}">
+                        <i class="text-white text-2xl mx-2 fas fa-bell"></i>
+                        <span class="border-2 border-white relative -top-1.5 -left-5 inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'notificaciones' %}"><i class="text-2xl mx-5 far fa-bell"></i></a>
+                {% endif %}
                 <i class="cursor-pointer text-white text-3xl fas fa-bars" id="botonHiddenMenu"></i>
             </div>
         </div>

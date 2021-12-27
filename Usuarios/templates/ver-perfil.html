@@ -182,41 +182,24 @@
             <div class="mt-5 my-5 w-11/12 md:w-10/12 lg:mt-20 lg:w-8/12 xl:w-4/12 md:block lg:mr-5">
                 <div class="border shadow rounded-lg w-auto bg-white">
                     <h3 class="text-center bg-gray-200 text-gray-400 py-2">A quien seguir</h3>
-                    <div class="py-1 border-b border-gray-200">
-                        <div class="flex items-center text-sm px-5">
-                            <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
-                            <div class="flex flex-col">
-                                <p>Usuario</p>
-                                <p class="text-gray-400">@username</p>
-                            </div>
-                            <div class="flex justify-end w-full">
-                                <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="py-1 border-b border-gray-200">
-                        <div class="flex items-center text-sm px-5">
-                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+                    <div class="py-1">
+                        {% for no_seguido in request.no_seguidos %}
+                            <div class="flex items-center text-sm px-5">
+                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="{{ no_seguido.perfil.img.url }}" alt="">
                                 <div class="flex flex-col">
-                                    <p>Usuario</p>
-                                    <p class="text-gray-400">@username</p>
+                                    <a href="{% url 'ver-perfil' no_seguido.username %}">
+                                        <p>{{ no_seguido.first_name }}</p>
+                                    </a>
+                                    <a href="{% url 'ver-perfil' no_seguido.username %}">
+                                        <p class="text-gray-400">@{{ no_seguido.username }}</p>
+                                    </a>
                                 </div>
                                 <div class="flex justify-end w-full">
-                                    <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
+                                    <button id="followButton" data-username={{ no_seguido.username }} class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
                                 </div>
                             </div>
-                    </div>
-                    <div class="py-1 border-gray-200">
-                        <div class="flex items-center text-sm px-5">
-                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
-                                <div class="flex flex-col">
-                                    <p>Usuario</p>
-                                    <p class="text-gray-400">@username</p>
-                                </div>
-                                <div class="flex justify-end w-full">
-                                    <button class="border-2 border-teal-500 text-teal-500 p-2 rounded-full w-4/6 md:w-2/6 lg:w-3/6 hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
-                                </div>
-                            </div>
+                        {% endfor %}
+                        
                     </div>
                 </div>
             </div>

@@ -27,7 +27,12 @@
             <div class="m-auto h-auto w-11/12 md:w-8/12 shadow-2xl bg-teal-700 text-white rounded-lg">
                 <h1 class="p-5 text-center text-4xl"><i class="fas fa-kiwi-bird"></i> Meeper</h1>
                 <p class="text-2xl text-center mb-3">Iniciar Sesión</p>
-                
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="text-xl text-emerald-300 text-center mb-3">{{ message }}</p>
+                    {% endfor %}
+                {% else %}
+                {% endif %}
                 <form action="#" method="POST">
                     {% csrf_token %}
                     <div class="m-auto mb-4 w-10/12">

@@ -7,9 +7,12 @@ from django.contrib.auth.models import User
 from Posts.models import Post
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 # Create your views here.
 def crear_cuenta(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method == "GET":
         return render(request, 'crear-cuenta.html')
     if request.method == "POST":
@@ -18,6 +21,7 @@ def crear_cuenta(request):
             user = form.save()
             perfil = Perfil(user=user)
             perfil.save()
+            messages.success(request, 'Tu cuenta ha sido creada')
             return redirect('home')
         else:
             return render(request, 'crear-cuenta.html', { 'errors': form.errors })
