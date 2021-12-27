@@ -18,13 +18,13 @@
     
     <section class="flex">
         
-        <div class="flex flex-col {% if errors %} h-full {% else %} h-screen {% endif %} w-6/12 bg-teal-600">
+        <div class="w-full flex flex-col {% if errors %} h-full {% else %} h-screen {% endif %} lg:w-6/12 bg-teal-600">
 
             <!-- <div class="m-auto mb-0">
                 <h1 class="text-center text-3xl text-white">Conecta con personas de todo el mundo.</h1>
             </div> -->
 
-            <div class="m-auto h-auto w-8/12 shadow-2xl bg-teal-700 text-white rounded-lg">
+            <div class="m-auto h-auto w-11/12 md:w-8/12 shadow-2xl bg-teal-700 text-white rounded-lg">
                 <h1 class="p-5 text-center text-4xl"><i class="fas fa-kiwi-bird"></i> Meeper</h1>
                 <p class="text-2xl text-center mb-3">Crear Cuenta</p>
                 
@@ -79,7 +79,7 @@
 
         </div>
 
-        <div class=" {% if errors %} h-full {% else %} h-screen {% endif %} w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
+        <div class="hidden lg:block {% if errors %} h-full {% else %} h-screen {% endif %} w-6/12 bg-cover bg-right" style="background-image: url({% static "img/bg-login.jpg" %});">
 
         </div>
     </section>
