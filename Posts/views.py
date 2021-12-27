@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
-
+from django.shortcuts import render
 from Usuarios.models import Notificacion
 from .models import Comentario, Like, Post
 from .forms import FormPost
@@ -121,3 +121,11 @@ def dislike(request, post_id):
             return HttpResponse(200)
         except:
             return HttpResponse(500)
+
+def ver_publicacion(request, post_id):
+    post = Post.objects.filter(id=post_id).first()
+    print(post)
+    if post:
+        return render(request, 'ver-publicacion.html', { 'post': post })
+    else:
+        return HttpResponse('XD')

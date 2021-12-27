@@ -11,11 +11,12 @@
                     <!-- NOTIFICACION FOLLOW -->
                     <div class="flex justify-center">
                         <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
-                            <div class="flex-col">
-                                    <div class="flex items-center">
-                                        <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
-                                        <p class="text-gray-600"><span class="text-teal-500">{{ notificacion.from_user.username }}</span> te siguió.</p>
-                                    </div>
+                            <div class="flex-col py-2">
+                                <p class="text-gray-400 px-4">{{ notificacion.timestamp|naturaltime }}</p>
+                                <div class="flex items-center">
+                                    <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                    <p class="text-gray-600"><a href="{% url 'ver-perfil' notificacion.from_user.username %}"><span class="text-teal-500">{{ notificacion.from_user.username }}</span></a> te siguió.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -25,12 +26,15 @@
                         <!-- NOTIFICACION LIKE -->
                         <div class="flex justify-center">
                             <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
-                                <div class="flex-col">
-                                        <div class="flex items-center">
-                                            <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
-                                            <p class="text-gray-600">A <span class="text-teal-500">{{ notificacion.from_user.username }}</span> le gustó tu post</p>
-                                        </div>
+                                <div class="flex-col py-2">
+                                    <p class="text-gray-400 px-4">{{ notificacion.timestamp|naturaltime }}</p>
+                                    <div class="flex items-center">
+                                        <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                        <p class="text-gray-600">A <a href="{% url 'ver-perfil' notificacion.from_user.username %}"><span class="text-teal-500">{{ notificacion.from_user.username }}</span></a> le gustó tu post</p>
+                                    </div>
+                                    <a href="{% url 'ver-publicacion' notificacion.like.post.id %}">
                                         <p class="px-3 pb-3 text-gray-400">{{ notificacion.like.post.content }}</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -40,12 +44,15 @@
                             <!-- NOTIFICACION COMENTARIO -->
                             <div class="flex justify-center">
                                 <div class="w-full md:w-5/6 lg:w-4/6 xl:w-3/6 relative border shadow-md {% if notificacion.leida %} bg-white {% else %} bg-teal-50 {% endif %} rounded-lg m-auto mb-5 overflow-hidden">
-                                    <div class="flex-col">
-                                            <div class="flex items-center">
-                                                <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
-                                                <p class="text-gray-600"><span class="text-teal-500">{{ notificacion.from_user.username }}</span> comentó tu post</p>
-                                            </div>
+                                    <div class="flex-col py-2">
+                                        <p class="text-gray-400 px-4">{{ notificacion.timestamp|naturaltime }}</p>
+                                        <div class="flex items-center">
+                                            <img class="relative m-3 object-cover w-10 h-10 rounded-full" src="{{ notificacion.from_user.perfil.img.url }}" alt="">
+                                            <p class="text-gray-600"><a href="{% url 'ver-perfil' notificacion.from_user.username %}"><span class="text-teal-500">{{ notificacion.from_user.username }}</span></a> comentó tu post</p>
+                                        </div>
+                                        <a href="{% url 'ver-publicacion' notificacion.comentario.post.id %}">
                                             <p class="px-3 pb-3">{{ notificacion.comentario.content }}</p>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

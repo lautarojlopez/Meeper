@@ -33,7 +33,7 @@ class FormEditarUsuario(forms.ModelForm):
 class FormEditarPerfil(forms.ModelForm):
     img = forms.ImageField()
     img.widget.attrs['class'] = 'p-2 focus:outline-none border border-gray-300 rounded-lg'
-    bio = forms.CharField()
+    bio = forms.CharField(required=False)
     bio.widget.attrs['class'] = 'p-3 focus:outline-none border resize-none border-gray-300 rounded-lg'
     bio.widget.attrs['rows'] = 3
     bio.widget.attrs['cols'] = 10

@@ -8,4 +8,5 @@ urlpatterns = [
     path('comentario/<int:comentario_id>/eliminar/', eliminar_comentario, name="eliminar-comentario"),
     path('<int:post_id>/like/', like, name='like'),
     path('<int:post_id>/dislike/', dislike, name='dislike'),
+    path('<int:post_id>/', ver_publicacion, name='ver-publicacion')
 ]

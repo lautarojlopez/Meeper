@@ -1,83 +1,10 @@
 {% extends "layout.html" %}
-{% load static %}
 {% load humanize %}
-
+{% load static %}
 {% block content %}
 
-        <div class="flex flex-col lg:flex-row lg:items-start items-center h-full overflow-auto">
-            <!-- USER CARD -->
-            <div class="w-11/12 md:w-10/12 lg:w-8/12 xl:w-4/12 md:block mt-20 lg:ml-5">
-                <div class="border shadow rounded-lg w-auto bg-white">
-                    <div class="flex justify-between items-center">
-                        <div class="flex flex-row items-center">
-                            <a href="{% url 'ver-perfil' user.username %}"><img class="m-3 object-cover w-20 h-20 rounded-full" src="{{ user.perfil.img.url }}" alt=""></a>
-                            <div class="flex flex-col">
-                                <a href="{% url 'ver-perfil' user.username %}">
-                                    <p>{{ user.first_name }}</p>
-                                </a>
-                                <a href="{% url 'ver-perfil' user.username %}">
-                                    <p class="text-gray-400 shadow-2xl">@{{ user.username }}</p>
-                                </a>
-                                
-                            </div>
-                        </div>
-                        {% if user == request.user %}
-                            <div class="flex justify-end pr-5">
-                                <a href="{% url 'editar-perfil' %}" class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Editar Perfil</a>
-                            </div>
-                        {% else %}
-                            {% if user in request.user.perfil.siguiendo %}
-                                <div class="flex justify-end pr-5">
-                                    <button id="unfollowButton" data-username={{ user.username }} class="border-2 bg-teal-500 border-teal-500 text-white p-2 rounded-full hover:bg-red-500 hover:border-red-700 hover:text-white transition-all ease-linear duration-100">Dejar de seguir</button>
-                                </div>
-                            {% else %}
-                                <div class="flex justify-end pr-5">
-                                    <button id="followButton" data-username={{ user.username }} class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    <div>
-                        <p class="text-gray-400 px-3 text-center pb-3">{{ user.perfil.bio }}</p>
-                    </div>
-                    <div class="border-t py-3 px-5 bg-gray-100">
-                        <div class="flex justify-between">
-                            <div class="flex flex-col">
-                                <p class="text-gray-400">Meeps</p>
-                                <p>{{ user.posts.count }}</p>
-                            </div>
-                            <div class="flex flex-col">
-                                <p class="text-gray-400">Seguidos</p>
-                                <p>{{ user.perfil.siguiendo.count }}</p>
-                            </div>
-                            <div class="flex flex-col">
-                                <p class="text-gray-400">Seguidores</p>
-                                <p>{{ user.perfil.seguidores.count }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% if user == request.user %}
-                        <div class="border-t py-3 px-5 bg-gray-100">
-                            <form action="{% url 'nuevo-post' %}" method="POST">
-                                {% csrf_token %}
-                                <textarea id="mensaje" name="content" class="transition-all ease-linear duration-100 resize-none overflow-hidden border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 w-full p-2" type="text" name="" id="" placeholder="¿Qué estás pensando?" cols="30" rows="2"></textarea>
-                                <div class="flex justify-between">
-                                    <button id="botonEnviar" class="desactivado cursor-auto transition-all ease-linear duration-100 p-2 bg-gray-300 rounded-lg text-white mt-1"><i class="fas fa-paper-plane"></i> Enviar</button>
-                                    <p class="texto-contador text-sm text-gray-400"><span id="contador">0</span>/280</p>
-                                </div>
-                            </form>
-                        </div>
-                    {% endif %}
-                    
-                </div>
-            </div>
-            <!-- FIN USER CARD -->
-
-
-            <!-- CONTENIDO -->
-            <div class="order-last lg:order-none lg:mt-20 lg:mx-5 w-11/12 md:w-10/12 lg:w-8/12 xl:w-6/12">
-                {% if posts %}
-                    {% for post in posts %}
+<div class="flex justify-center flex-col lg:flex-row lg:items-start items-center h-full overflow-auto">
+<div class="lg:order-none mt-20 lg:mx-5 w-11/12 md:w-10/12 lg:w-8/12 xl:w-6/12">
                         <!-- Tweet -->
                         <div class="relative border shadow-md bg-white rounded-lg m-auto mb-5 overflow-hidden">
                             <div class="flex items-center">
@@ -105,11 +32,12 @@
                                 {% endif %}
                                 
                             </div>
-                            <a href="{% url 'ver-publicacion' post.id %}">
+                           <a href="{% url 'ver-publicacion' post.id %}">
                                 <p class="px-5 text-gray-400">{{ post.timestamp|naturaltime }}</p>
                             </a>
-                            <p class="px-5 pb-3">{{ post.content }}</p>
-                            <div class="flex justify-start ml-2">
+                            <p class="px-5 pb-2">{{ post.content }}</p>
+                            
+                                <div class="flex justify-start ml-2">
                                     <button class="pb-2 pl-3 text-md transition-all ease-linear duration-100 text-gray-400 hover:text-blue-600"><i id="commentButton" class="far fa-comment"></i> {{ post.comentarios.count }}</button>
                                     {% if post in request.user.perfil.likes %}
                                         <button class="pb-2 pl-3 text-md transition-all ease-linear duration-100 text-red-600"><i id="dislikeButton" class="fas fa-heart"></i> <span class="cursor-auto">{{ post.likes.count }}</span></button>
@@ -137,7 +65,6 @@
                                                         <i class="cursor-pointer text-gray-400 text-2xl fas fa-ellipsis-h" id="menuPostIcon"></i>
                                                         <div class="hidden transition-all duration-100 ease-linear absolute rounded top-5 w-auto border border-gray-300 bg-gray-100 hover:bg-gray-200" id="menuPost">
                                                             <form action="javascript:void(0);" method="POST">
-                                                                {% csrf_token %}
                                                                 <ul>
                                                                     <li>
                                                                         <p class="cursor-pointer text-red-500 text-center p-2" id="eliminarComentario" data-comentarioid="{{ comentario.id }}"><i class="far fa-trash-alt"></i> Eliminar</p>
@@ -171,41 +98,6 @@
                             </div>
                         </div>
                         <!-- Fin Tweet -->
-                    {% endfor %}
-                {% else %}
-                    <p class="text-gray-400 pb-5 text-center">Nada para mostrar aún</p>
-                {% endif %}
-                
+                        </div>
 
-            </div>
-            <!-- FIN CONTENIDO -->
-
-            <!-- A QUIEN SEGUIR -->
-            <div class="mt-5 my-5 w-11/12 md:w-10/12 lg:mt-20 lg:w-8/12 xl:w-4/12 md:block lg:mr-5">
-                <div class="border shadow rounded-lg w-auto bg-white">
-                    <h3 class="text-center bg-gray-200 text-gray-400 py-2">A quien seguir</h3>
-                    <div class="py-1">
-                        {% for no_seguido in request.no_seguidos %}
-                            <div class="flex items-center text-sm px-5">
-                                <img class="relative m-3 ml-0 object-cover w-10 h-10 rounded-full" src="{{ no_seguido.perfil.img.url }}" alt="">
-                                <div class="flex flex-col">
-                                    <a href="{% url 'ver-perfil' no_seguido.username %}">
-                                        <p>{{ no_seguido.first_name }}</p>
-                                    </a>
-                                    <a href="{% url 'ver-perfil' no_seguido.username %}">
-                                        <p class="text-gray-400">@{{ no_seguido.username }}</p>
-                                    </a>
-                                </div>
-                                <div class="flex justify-end w-full">
-                                    <button id="followButton" data-username={{ no_seguido.username }} class="border-2 border-teal-500 text-teal-500 p-2 rounded-full hover:bg-teal-500 hover:text-white transition-all ease-linear duration-100">Seguir</button>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        
-                    </div>
-                </div>
-            </div>
-            <!-- FIN A QUIEN SEGUIR -->
-
-        </div>
 {% endblock content %}
